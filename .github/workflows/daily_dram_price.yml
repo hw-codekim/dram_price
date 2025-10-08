@@ -1,22 +1,23 @@
 name: Daily DRAMeXchange Crawl
 
+# 16:30 KST = 07:30 UTC
 on:
   schedule:
-    - cron: "30 7 * * *"  # UTC 07:30 = KST 16:30
-  workflow_dispatch:      # 수동 실행 가능
+    - cron: "30 7 * * *"
+  workflow_dispatch:
 
 jobs:
   run:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ 레포지토리 체크아웃
+      # 1️⃣ 레포 체크아웃
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 2️⃣ Python 설정
+      # 2️⃣ Python 세팅
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -28,15 +29,25 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 4️⃣ scraper 실행 (working-directory 사용으로 경로 문제 방지)
+      # 4️⃣ 스크래퍼 실행 (working-directory 설정)
       - name: Run scraper
+        working-directory: ./dram_price
         run: python main.py
 
-      # 5️⃣ 변경된 엑셀 파일 커밋 & 푸시
+      # 5️⃣ 엑셀 파일 commit & push
       - name: Commit and push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add dram_price/DRAMeXchange_Semi_price.xlsx
-          git diff --cached --quiet || git commit -m "Auto update: $(date '+%Y-%m-%d %H:%M')"
-          git push
+          
+          # 파일 존재 확인
+          if [ -f "dram_price/DRAMeXchange_Semi_price.xlsx" ]; then
+            git add dram_price/DRAMeXchange_Semi_price.xlsx
+            
+            # 변경사항이 있으면 commit
+            git diff --cached --quiet || git commit -m "Auto update: $(date '+%Y-%m-%d %H:%M')"
+            
+            git push
+          else
+            echo "❌ 파일이 존재하지 않아 commit 생략"
+          fi
