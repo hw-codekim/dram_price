@@ -31,7 +31,6 @@ jobs:
 
       # 4️⃣ 스크래퍼 실행 (working-directory 설정)
       - name: Run scraper
-        working-directory: ./dram_price
         run: python main.py
 
       # 5️⃣ 엑셀 파일 commit & push
