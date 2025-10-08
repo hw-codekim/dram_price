@@ -30,7 +30,6 @@ jobs:
 
       # 4️⃣ scraper 실행 (working-directory 사용으로 경로 문제 방지)
       - name: Run scraper
-        working-directory: ./dram_price
         run: python main.py
 
       # 5️⃣ 변경된 엑셀 파일 커밋 & 푸시
