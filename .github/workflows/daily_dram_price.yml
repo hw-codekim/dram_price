@@ -1,0 +1,37 @@
+name: Daily DRAMeXchange Crawl
+
+on:
+  schedule:
+    - cron: "30 7 * * *"  # UTC 07:30 = KST 16:30
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run scraper
+        run: |
+          python main.py
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add DRAMeXchange_Semi_price.xlsx
+          git commit -m "Auto update: $(date '+%Y-%m-%d %H:%M')"
+          git push
