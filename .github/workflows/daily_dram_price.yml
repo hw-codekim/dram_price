@@ -48,9 +48,8 @@ jobs:
           
           if [ -f "dram_price/DRAMeXchange_Semi_price.xlsx" ]; then
             git add dram_price/DRAMeXchange_Semi_price.xlsx
-            
             git diff --cached --quiet || git commit -m "Auto update: $(date '+%Y-%m-%d %H:%M')"
-            
             git push
           else
             echo "❌ 파일이 존재하지 않아 commit 생략"
+          fi
