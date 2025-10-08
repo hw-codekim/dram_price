@@ -35,7 +35,7 @@ jobs:
 
       # 5️⃣ Telegram 전송 (tele_send.py)
       - name: Send Telegram message
-        run: python dram_price/tele_send.py
+        run: python tele_send.py
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
