@@ -3,7 +3,7 @@ name: Daily DRAMeXchange Crawl
 # 16:30 KST = 07:30 UTC
 on:
   schedule:
-    - cron: "30 7 * * *"
+    - cron: "0 7 * * *"
   workflow_dispatch:
 
 jobs:
@@ -29,23 +29,26 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 4️⃣ 스크래퍼 실행 (working-directory 설정)
+      # 4️⃣ 스크래퍼 실행 (main.py)
       - name: Run scraper
         run: python main.py
 
-      # 5️⃣ 엑셀 파일 commit & push
+      # 5️⃣ Telegram 전송 (tele_send.py)
+      - name: Send Telegram message
+        run: python tele_send.py
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+
+      # 6️⃣ 엑셀 파일 commit & push
       - name: Commit and push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
-          # 파일 존재 확인
           if [ -f "dram_price/DRAMeXchange_Semi_price.xlsx" ]; then
             git add dram_price/DRAMeXchange_Semi_price.xlsx
-            
-            # 변경사항이 있으면 commit
             git diff --cached --quiet || git commit -m "Auto update: $(date '+%Y-%m-%d %H:%M')"
-            
             git push
           else
             echo "❌ 파일이 존재하지 않아 commit 생략"
