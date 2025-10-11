@@ -62,8 +62,8 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          if [ -f "dram_price/DRAMeXchange_Semi_price.xlsx" ]; then
-            git add dram_price/DRAMeXchange_Semi_price.xlsx
+          if [ -f "DRAMeXchange_Semi_price.xlsx" ]; then
+            git add DRAMeXchange_Semi_price.xlsx
             git diff --cached --quiet || git commit -m "Auto update: $(date '+%Y-%m-%d %H:%M')"
             git push
           else
