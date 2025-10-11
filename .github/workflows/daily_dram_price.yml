@@ -15,7 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          persist-credentials: false  # <-- 중요! git push 권한 충돌 방지
+          persist-credentials: false  # <-- git push 권한 충돌 방지
 
       # 2️⃣ Python 세팅
       - name: Set up Python
@@ -32,6 +32,22 @@ jobs:
       # 4️⃣ 스크래퍼 실행 (main.py)
       - name: Run scraper
         run: python main.py
+
+      # ✅ 4.5️⃣ 파일 존재 여부 확인 (디버깅용)
+      - name: Check generated files
+        run: |
+          echo "현재 작업 디렉토리:"
+          pwd
+          echo ""
+          echo "전체 파일 구조:"
+          ls -R
+          echo ""
+          echo "특정 경로 dram_price/DRAMeXchange_Semi_price.xlsx 존재 여부 확인:"
+          if [ -f "dram_price/DRAMeXchange_Semi_price.xlsx" ]; then
+            echo "✅ 파일 존재함"
+          else
+            echo "❌ 파일 없음"
+          fi
 
       # 5️⃣ Telegram 전송 (tele_send.py)
       - name: Send Telegram message
@@ -54,4 +70,4 @@ jobs:
             echo "❌ 파일이 존재하지 않아 commit 생략"
           fi
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # <-- 이게 push 인증의 핵심
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
