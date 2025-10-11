@@ -15,7 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false  # <-- 중요! git push 권한 충돌 방지
 
       # 2️⃣ Python 세팅
       - name: Set up Python
@@ -41,10 +41,10 @@ jobs:
           CHAT_ID: ${{ secrets.CHAT_ID }}
 
       # 6️⃣ 엑셀 파일 commit & push
-      - name: Commit and push changes
+      - name: Commit and push Excel file
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
           if [ -f "dram_price/DRAMeXchange_Semi_price.xlsx" ]; then
             git add dram_price/DRAMeXchange_Semi_price.xlsx
@@ -53,3 +53,5 @@ jobs:
           else
             echo "❌ 파일이 존재하지 않아 commit 생략"
           fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # <-- 이게 push 인증의 핵심
