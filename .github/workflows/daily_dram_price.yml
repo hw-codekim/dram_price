@@ -56,18 +56,28 @@ jobs:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
 
-      # 6️⃣ 엑셀 파일 commit & push
-      - name: Commit and push Excel file
+      # 6️⃣ 엑셀 + PNG 파일 commit & push
+      - name: Commit and push files
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
+
+          # commit할 파일 확인
+          files_to_commit=""
           if [ -f "DRAMeXchange_Semi_price.xlsx" ]; then
-            git add DRAMeXchange_Semi_price.xlsx
+            files_to_commit+=" DRAMeXchange_Semi_price.xlsx"
+          fi
+          if [ -f "DDR5_16G.png" ]; then
+            files_to_commit+=" DDR5_16G.png"
+          fi
+
+          if [ -n "$files_to_commit" ]; then
+            git add $files_to_commit
             git diff --cached --quiet || git commit -m "Auto update: $(date '+%Y-%m-%d %H:%M')"
             git push
+            echo "✅ Commit & push 완료: $files_to_commit"
           else
-            echo "❌ 파일이 존재하지 않아 commit 생략"
+            echo "❌ commit할 파일 없음"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # ✅ push 인증
