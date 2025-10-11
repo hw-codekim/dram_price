@@ -42,8 +42,8 @@ jobs:
           echo "전체 파일 구조:"
           ls -R
           echo ""
-          echo "특정 경로 dram_price/DRAMeXchange_Semi_price.xlsx 존재 여부 확인:"
-          if [ -f "dram_price/DRAMeXchange_Semi_price.xlsx" ]; then
+          echo "특정 경로 DRAMeXchange_Semi_price.xlsx 존재 여부 확인:"
+          if [ -f "DRAMeXchange_Semi_price.xlsx" ]; then
             echo "✅ 파일 존재함"
           else
             echo "❌ 파일 없음"
