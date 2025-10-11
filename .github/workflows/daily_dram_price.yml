@@ -15,7 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          persist-credentials: false  # <-- git push 권한 충돌 방지
+          persist-credentials: true  # ✅ GitHub token 자동 연결
 
       # 2️⃣ Python 세팅
       - name: Set up Python
@@ -70,4 +70,4 @@ jobs:
             echo "❌ 파일이 존재하지 않아 commit 생략"
           fi
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # ✅ push 인증
